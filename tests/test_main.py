@@ -57,7 +57,25 @@ def test_main_division_by_zero():
 def test_get_numbers_invalid_then_valid():
     with patch('builtins.input', side_effect=['abc', '10', '5']):
         assert get_numbers() == (10.0, 5.0)
+from unittest.mock import patch
+import pytest
+from calculator.main import main
 
+def test_main_multiplication_then_exit():
+    """Test the main function for a multiplication operation."""
+    user_inputs = ['*', '5', '3', 'exit']
+    with patch('builtins.input', side_effect=user_inputs), \
+         patch('builtins.print') as mock_print:
+        main()
+        mock_print.assert_any_call('Result: 15.0\n')
+
+def test_main_division_then_exit():
+    """Test the main function for a division operation."""
+    user_inputs = ['/', '10', '2', 'exit']
+    with patch('builtins.input', side_effect=user_inputs), \
+         patch('builtins.print') as mock_print:
+        main()
+        mock_print.assert_any_call('Result: 5.0\n')
 
 def test_main_division_by_zero():
     # Simulate a division by zero error
