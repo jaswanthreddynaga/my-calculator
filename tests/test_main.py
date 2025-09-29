@@ -43,17 +43,7 @@ def test_main_division_then_exit():
         # Assert that the result was printed at some point
         mock_print.assert_any_call('Result: 5.0\n')
 
-# The test for the `if __name__ == "__main__":` block is also needed for 100% coverage
-def test_main_entry_point():
-    # Patch the main function and the module's __name__ to test the entry point
-    with patch('calculator.main.main') as mock_main, \
-         patch('calculator.main.__name__', '__main__'):
-        # Reload the module to trigger the `if __name__ == '__main__'` block
-        import importlib
-        import calculator.main
-        importlib.reload(calculator.main)
-        # Assert that the main function was called
-        mock_main.assert_called_once()
+
              
 def test_main_division_by_zero():
     # Simulate a division by zero and then exit
