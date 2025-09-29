@@ -1,4 +1,4 @@
-from operations import add, subtract, multiply, divide
+from calculator.operations import add, subtract, multiply, divide
 
 def get_numbers():
     while True:
