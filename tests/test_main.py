@@ -34,9 +34,24 @@ def test_main_loop():
     with patch('builtins.input', side_effect=user_inputs), \
          patch('builtins.print') as mock_print:
         main()
-        # Check if the correct results were printed
-        assert mock_print.call_args_list[1].args[0] == 'Result: 8.0\n'
-        assert mock_print.call_args_list[3].args[0] == 'Result: 5.0\n'
+        # You need to be more careful with the indices of call_args_list.
+        # The print calls are:
+        # 0: "Welcome..."
+        # 1: "Enter operation..."
+        # 2: "Enter first number..."
+        # 3: "Enter second number..."
+        # 4: "Result: 8.0\n"
+        # 5: "Enter operation..."
+        # 6: "Enter first number..."
+        # 7: "Enter second number..."
+        # 8: "Result: 5.0\n"
+        # 9: "Enter operation..."
+        # 10: "Goodbye!"
+
+        # A better approach is to check if certain calls were made
+        assert mock_print.call_args_list[4].args[0] == 'Result: 8.0\n'
+        assert mock_print.call_args_list[8].args[0] == 'Result: 5.0\n'
+        assert mock_print.call_args_list[10].args[0] == 'Goodbye!'
 
 def test_main_division_by_zero():
     # Simulate a division by zero error
