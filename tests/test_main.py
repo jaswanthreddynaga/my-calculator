@@ -27,23 +27,24 @@ def test_get_numbers_valid():
 
 
 # New tests that check for the presence of a specific print call
+
 def test_main_multiplication_then_exit():
+    # Simulate a user performing multiplication and then exiting
     user_inputs = ['*', '5', '3', 'exit']
     with patch('builtins.input', side_effect=user_inputs), \
          patch('builtins.print') as mock_print:
         main()
-        # Assert that the result was printed at some point
+        # Assert that the correct result was printed
         mock_print.assert_any_call('Result: 15.0\n')
 
 def test_main_division_then_exit():
+    # Simulate a user performing division and then exiting
     user_inputs = ['/', '10', '2', 'exit']
     with patch('builtins.input', side_effect=user_inputs), \
          patch('builtins.print') as mock_print:
         main()
-        # Assert that the result was printed at some point
+        # Assert that the correct result was printed
         mock_print.assert_any_call('Result: 5.0\n')
-
-
              
 def test_main_division_by_zero():
     # Simulate a division by zero and then exit
