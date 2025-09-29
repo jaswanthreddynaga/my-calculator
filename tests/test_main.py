@@ -1,0 +1,48 @@
+from unittest.mock import patch
+import pytest
+from calculator.main import get_operation, get_numbers, main
+
+# Test get_operation() to ensure it handles valid and invalid input
+@pytest.mark.parametrize("input_value, expected_output", [
+    ('+', '+'),
+    ('-', '-'),
+    ('*', '*'),
+    ('/', '/'),
+    ('exit', 'exit')
+])
+def test_get_operation_valid(input_value, expected_output):
+    with patch('builtins.input', return_value=input_value):
+        assert get_operation() == expected_output
+
+def test_get_operation_invalid_then_valid():
+    with patch('builtins.input', side_effect=['invalid', '+']):
+        assert get_operation() == '+'
+
+# Test get_numbers() to check for valid and invalid number inputs
+def test_get_numbers_valid():
+    with patch('builtins.input', side_effect=['10', '5']):
+        assert get_numbers() == (10.0, 5.0)
+
+def test_get_numbers_invalid_then_valid():
+    with patch('builtins.input', side_effect=['abc', '10', '5']):
+        assert get_numbers() == (10.0, 5.0)
+
+# Test the main REPL loop by simulating a full session
+def test_main_loop():
+    # Simulate a full session: add, subtract, and then exit
+    user_inputs = ['+', '5', '3', '-', '10', '5', 'exit']
+    with patch('builtins.input', side_effect=user_inputs), \
+         patch('builtins.print') as mock_print:
+        main()
+        # Check if the correct results were printed
+        assert mock_print.call_args_list[1].args[0] == 'Result: 8.0\n'
+        assert mock_print.call_args_list[3].args[0] == 'Result: 5.0\n'
+
+def test_main_division_by_zero():
+    # Simulate a division by zero error
+    user_inputs = ['/', '10', '0', 'exit']
+    with patch('builtins.input', side_effect=user_inputs), \
+         patch('builtins.print') as mock_print:
+        main()
+        # Check if the error message was printed
+        assert mock_print.call_args_list[1].args[0] == 'Error: Cannot divide by zero.\n'
