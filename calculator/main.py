@@ -41,5 +41,5 @@ def main():
         except ZeroDivisionError as e:
             print(f"Error: {e}\n")
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()
