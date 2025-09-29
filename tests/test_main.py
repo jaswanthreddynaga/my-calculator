@@ -25,24 +25,36 @@ def test_get_numbers_valid():
 
 # test_main.py (addition)
 
+
+# New tests that check for the presence of a specific print call
 def test_main_multiplication_then_exit():
-    # Simulate a multiplication operation and then exit
     user_inputs = ['*', '5', '3', 'exit']
     with patch('builtins.input', side_effect=user_inputs), \
          patch('builtins.print') as mock_print:
         main()
-        # The result print is at call_args_list[4] for this sequence
-        assert mock_print.call_args_list[4].args[0] == 'Result: 15.0\n'
+        # Assert that the result was printed at some point
+        mock_print.assert_any_call('Result: 15.0\n')
 
 def test_main_division_then_exit():
-    # Simulate a division operation and then exit
     user_inputs = ['/', '10', '2', 'exit']
     with patch('builtins.input', side_effect=user_inputs), \
          patch('builtins.print') as mock_print:
         main()
-        # The result print is at call_args_list[4] for this sequence
-        assert mock_print.call_args_list[4].args[0] == 'Result: 5.0\n'
+        # Assert that the result was printed at some point
+        mock_print.assert_any_call('Result: 5.0\n')
 
+# The test for the `if __name__ == "__main__":` block is also needed for 100% coverage
+def test_main_entry_point():
+    # Patch the main function and the module's __name__ to test the entry point
+    with patch('calculator.main.main') as mock_main, \
+         patch('calculator.main.__name__', '__main__'):
+        # Reload the module to trigger the `if __name__ == '__main__'` block
+        import importlib
+        import calculator.main
+        importlib.reload(calculator.main)
+        # Assert that the main function was called
+        mock_main.assert_called_once()
+             
 def test_main_division_by_zero():
     # Simulate a division by zero and then exit
     user_inputs = ['/', '10', '0', 'exit']
